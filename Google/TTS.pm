@@ -18,15 +18,6 @@ use LWP::UserAgent;
 use LWP::ConnCache;
 
 my @text;
-my $speed   = 1.2;
-my $lang    = "de";
-my $tmpdir  = "/var/tmp";
-my $timeout = 10;
-my $url     = "http://translate.google.com/translate_tts";
-
-my $mpg123  = "/usr/bin/mpg123";
-my $sox     = "/usr/bin/sox";
-
 
 # init
 sub new {
@@ -41,7 +32,9 @@ sub new {
         $self->{'timeout'}    		= "10";
         $self->{'googleurl'} 		= "http://translate.google.com/translate_tts";
         $self->{'languages'}		= languages();
-	$self->{'auformat'}		= 'wav';
+	$self->{'auformat'}		= "wav";
+        $self->{'mpg123'}               = "/usr/bin/mpg123";
+        $self->{'sox'}                  = "/usr/bin/sox";
 	$self->{'soxargs'}		= '';
         return($self);
 }
@@ -54,7 +47,15 @@ sub say_text {
 	my $samplerate		= $self->{'samplerate'};
 	my $filename		= '';
 	my $wav_name;
-
+	my $lang		= $self->{'lang'};
+	my $speed       	= $self->{'speed'};
+        my $tmpdir		= $self->{'tmpdir'};
+        my $timeout		= $self->{'timeout'};
+        my $url			= $self->{'googleurl'};
+	my $mpg123		= $self->{'mpg123'};
+	my $sox			= $self->{'sox'};
+	my $soxargs		= $self->{'soxargs'};
+	
 	for (@text) {
 		# Split input text to comply with google tts requirements #
 		s/[\\|*~<>^\n\(\)\[\]\{\}[:cntrl:]]/ /g;
@@ -212,3 +213,5 @@ sub languages {
 	);
 	return %sup_lang;
 }
+
+1;
